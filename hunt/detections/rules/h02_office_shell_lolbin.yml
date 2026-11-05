@@ -1,0 +1,37 @@
+title: Office Application Spawning Shell Into Signed Proxy Binary
+id: H02-office-shell-lolbin
+status: experimental
+description: >
+  Graduated from hunt H02. An Office application (gparent) spawns a command shell
+  (parent) that launches a signed proxy binary (rundll32/regsvr32/mshta). This
+  three-stage lineage is the footprint of a macro/document-triggered loader and
+  is fleet-rare; benign Office automation does not reach these LOLBins through a
+  shell.
+author: JP Scirica
+date: 2026/09/21
+references:
+  - hunts/H02-rare-process-lineage/hypothesis.md
+hunt_source: process
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    gparent:
+      - EXCEL.EXE
+      - WINWORD.EXE
+      - POWERPNT.EXE
+      - OUTLOOK.EXE
+    parent|endswith: cmd.exe
+    process:
+      - rundll32.exe
+      - regsvr32.exe
+      - mshta.exe
+  condition: selection
+falsepositives:
+  - Rare legitimate document automation; validate the child binary's arguments.
+level: high
+tags:
+  - attack.execution
+  - attack.t1204.002
+  - attack.t1059.003

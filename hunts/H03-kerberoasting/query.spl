@@ -1,0 +1,12 @@
+`comment("H03 - Kerberoasting: distinct RC4 SPNs per account in a sliding 10-minute window.")`
+index=wineventlog source="XmlWinEventLog:Security" EventCode=4769 Ticket_Encryption_Type=0x17 earliest=-14d@d
+| eval account=lower(mvindex(split(Account_Name,"@"),0)), spn=lower(Service_Name)
+| where NOT match(spn, "\$$") AND spn!="krbtgt"
+| sort 0 account _time
+| streamstats time_window=10m dc(spn) as distinct_spns values(spn) as spns count as requests by account
+| stats max(distinct_spns) as peak_distinct_spns latest(spns) as spns sum(eval(1)) as rc4_total min(_time) as first max(_time) as last values(Client_Address) as clients by account
+| where peak_distinct_spns >= 2
+| eval score=if(peak_distinct_spns>=5,1,0.3)*min(100, 100*peak_distinct_spns/9)
+| convert ctime(first) ctime(last)
+| sort - score
+| table account score peak_distinct_spns rc4_total spns clients first last

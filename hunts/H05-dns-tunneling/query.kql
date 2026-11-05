@@ -1,0 +1,31 @@
+// H05 - DNS tunneling: subdomain entropy, length and cardinality per registered domain
+// Sentinel ASIM DNS (_Im_Dns) or DnsEvents. Weekly hunt (data gap: no response sizes).
+let lookback = 14d;
+let known_cdns = dynamic(["akamai-cdn.example","cloudfront-dist.example"]);
+_Im_Dns(starttime = ago(lookback))
+| extend Q = tolower(DnsQuery)
+| extend Parts = split(Q, ".")
+| extend Registered = strcat(tostring(Parts[-2]), ".", tostring(Parts[-1]))   // use a PSL lookup in production
+| extend Sub = trim_end(@"\.", substring(Q, 0, strlen(Q) - strlen(Registered)))
+| where isnotempty(Sub)
+| extend Label = tostring(split(Sub, ".")[0])
+| summarize Unique = dcount(Sub), Queries = count(), TXT = countif(DnsQueryTypeName == "TXT"),
+            Labels = make_set(Label, 500), Hosts = make_set(SrcHostname, 20)
+          by Registered
+| where Unique >= 10
+| mv-apply L = Labels to typeof(string) on (
+    extend len = strlen(L)
+    | extend chars = extract_all(@"(.)", L)
+    | mv-apply ch = chars to typeof(string) on (
+        summarize n = count() by ch
+        | summarize H = -sum((n * 1.0 / len) * log2(n * 1.0 / len)) )
+    | summarize MeanLen = avg(len), MeanEntropy = avg(H)
+  )
+| extend LenT = max_of(0.0, min_of(1.0, (MeanLen - 10) / 30.0)),
+         EntT = max_of(0.0, min_of(1.0, (MeanEntropy - 2.5) / 2.0)),
+         CardT = max_of(0.0, min_of(1.0, (Unique - 10) / 290.0))
+| extend Score = 100.0 * (0.4 * LenT + 0.3 * EntT + 0.3 * CardT + iff(TXT > 0, 0.1, 0.0))
+| extend Score = iff(Registered in (known_cdns), Score * 0.1, Score)
+| project Registered, Score = round(Score, 1), Unique, Queries, TXT, MeanLen = round(MeanLen, 1),
+          MeanEntropy = round(MeanEntropy, 2), Hosts
+| order by Score desc

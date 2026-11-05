@@ -1,0 +1,24 @@
+`comment("H08 - Data staging then exfil: archive creation followed within 30m by egress above the host p95.")`
+`comment("Sysmon EventCode 11 (FileCreate) for archives; proxy via CIM Web datamodel.")`
+index=sysmon EventCode=11 earliest=-14d@d TargetFilename IN ("*.7z","*.zip","*.rar","*.tar","*.gz","*.cab")
+| eval archive_time=_time, archive=TargetFilename, staging_path=if(match(TargetFilename,"(?i)\\\\(perflogs|windows\\\\temp|programdata)\\\\|\\\\users\\\\public\\\\"),1,0)
+| table host User archive_time archive staging_path
+| join type=inner max=0 host [
+    | tstats summariesonly=false sum(Web.bytes_out) as bytes_out from datamodel=Web where earliest=-14d@d by _time span=1s Web.src Web.dest
+    | rename Web.src as host Web.dest as dest
+    | eventstats perc95(bytes_out) as p95 by host
+    | where bytes_out > p95
+    | eval net_time=_time, external=if(match(dest,"\.northwind\.example$") OR cidrmatch("10.0.0.0/8",dest) OR cidrmatch("192.168.0.0/16",dest) OR cidrmatch("172.16.0.0/12",dest),0,1)
+    | table host net_time dest bytes_out p95 external ]
+| where net_time>=archive_time AND net_time<=archive_time+1800
+| stats sum(eval(if(external=1,bytes_out,0))) as external_bytes sum(eval(if(external=0,bytes_out,0))) as internal_bytes
+        values(eval(if(external=1,dest,null()))) as destinations first(p95) as p95 by host User archive archive_time staging_path
+| where external_bytes+internal_bytes >= 50000000
+| eval is_external=if(external_bytes>=50000000,1,0),
+       moved=if(is_external=1, external_bytes, external_bytes+internal_bytes),
+       ratio=moved/max(p95,1),
+       score=100*(0.15+0.20*min(1,(ratio-1)/500)+0.20*min(1,moved/200000000)+0.35*is_external+0.10*staging_path),
+       score=round(if(is_external=1,score,score*0.2),1), moved_mb=round(moved/1000000,1)
+| convert ctime(archive_time)
+| sort - score
+| table archive_time host User archive moved_mb ratio is_external destinations staging_path score

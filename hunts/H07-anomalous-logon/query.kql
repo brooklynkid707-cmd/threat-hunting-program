@@ -1,0 +1,26 @@
+// H07 - Anomalous logon behaviour: per-account baseline of logon types and hours (Sentinel)
+let lookback = 14d;
+let interactive = dynamic([2, 10, 11]);
+let noninteractive = dynamic([3, 4, 5]);
+let logons = SecurityEvent
+    | where TimeGenerated > ago(lookback) and EventID == 4624
+    | where AccountType == "User"
+    | extend Account = tolower(TargetUserName), Hour = hourofday(TimeGenerated)
+    | project TimeGenerated, Computer, Account, LogonType, Hour, IpAddress;
+let profile = logons
+    | summarize Total = count(),
+                Interactive = countif(LogonType in (interactive)),
+                NonInteractive = countif(LogonType in (noninteractive)),
+                Types = make_set(LogonType),
+                NonIntHours = make_list_if(Hour, LogonType in (noninteractive), 10000)
+              by Account
+    | extend InteractiveFraction = Interactive * 1.0 / Total
+    | where NonInteractive > 0 and Interactive > 0 and InteractiveFraction <= 0.10;
+logons
+| where LogonType in (interactive)
+| join kind=inner profile on Account
+| extend OffHours = Hour < 6 or Hour >= 22
+| extend Score = min_of(100.0, 100.0 * (0.7 + iff(OffHours, 0.25, 0.0)) * iff(Account startswith "svc-", 1.05, 1.0))
+| project TimeGenerated, Account, Computer, LogonType, Hour, IpAddress, OffHours, Score = round(Score, 1),
+          InteractiveFraction = round(InteractiveFraction, 3), Total, Types
+| order by Score desc

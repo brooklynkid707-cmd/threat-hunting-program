@@ -1,0 +1,127 @@
+# Northwind Logistics SOC - threat hunting backlog (synthetic program, fictional company)
+#
+# Priority = threat_intel_relevance (1-5) x data_availability (1-5) x (6 - effort) / 5
+#   threat_intel_relevance: how strongly current intel / incidents / ATT&CK prevalence
+#                           for logistics-sector intrusions point at this behaviour
+#   data_availability:      5 = source collected, parsed, >=14d retention; 1 = not collected
+#   effort:                 1 (an afternoon) .. 5 (multi-week)
+# The CLI recomputes `priority` from these inputs; the stored value is for readers.
+# status: executed | queued | blocked-data-gap
+
+program: Northwind Logistics Tier 2 SOC - hunt program, cycle 2026-Q3
+owner: SOC Tier 2 (threat hunting rotation)
+cadence: two hunts per week; one cycle = the eight executed hunts below
+
+hunts:
+  - id: H01
+    title: C2 beaconing to unsanctioned external destinations
+    technique: T1071.001
+    hypothesis_source: threat intel (commodity loaders seen in logistics-sector phishing use HTTPS beacons with 5-min jittered sleep)
+    threat_intel_relevance: 5
+    data_availability: 5
+    effort: 2
+    priority: 20.0
+    status: executed
+  - id: H02
+    title: Document-launched process lineage (fleet stacking)
+    technique: T1204.002
+    hypothesis_source: incident (Q2 phishing post-incident review - macro launched a loader via cmd)
+    threat_intel_relevance: 5
+    data_availability: 5
+    effort: 1
+    priority: 25.0
+    status: executed
+  - id: H03
+    title: Kerberoasting - RC4 service-ticket bursts
+    technique: T1558.003
+    hypothesis_source: ATT&CK (top credential-access technique after initial access in ransomware precursors)
+    threat_intel_relevance: 4
+    data_availability: 5
+    effort: 1
+    priority: 20.0
+    status: executed
+  - id: H04
+    title: LOLBin download / proxy execution
+    technique: T1105
+    hypothesis_source: threat intel (LOLBAS fetch patterns in current loader reporting)
+    threat_intel_relevance: 4
+    data_availability: 5
+    effort: 1
+    priority: 20.0
+    status: executed
+  - id: H05
+    title: DNS tunneling via high-entropy subdomains
+    technique: T1048.003
+    hypothesis_source: ATT&CK + red team finding (DNS egress not restricted at the resolver)
+    threat_intel_relevance: 3
+    data_availability: 4
+    effort: 2
+    priority: 9.6
+    status: executed
+  - id: H06
+    title: Fleet-rare services and scheduled tasks
+    technique: T1543.003
+    hypothesis_source: ATT&CK (persistence baseline - never hunted here before)
+    threat_intel_relevance: 4
+    data_availability: 4
+    effort: 1
+    priority: 16.0
+    status: executed
+  - id: H07
+    title: Service accounts with interactive logons / off-hours use
+    technique: T1078.002
+    hypothesis_source: incident (audit found shared service-account passwords in a runbook)
+    threat_intel_relevance: 4
+    data_availability: 5
+    effort: 2
+    priority: 16.0
+    status: executed
+  - id: H08
+    title: Archive staging followed by external egress spike
+    technique: T1567.002
+    hypothesis_source: threat intel (double-extortion crews exfiltrate to cloud storage before encryption)
+    threat_intel_relevance: 5
+    data_availability: 4
+    effort: 2
+    priority: 16.0
+    status: executed
+  # --- queued for the next cycle ---------------------------------------------
+  - id: H09
+    title: LSASS access by non-security processes
+    technique: T1003.001
+    hypothesis_source: ATT&CK (credential dumping follows Kerberoasting in most precursor chains)
+    threat_intel_relevance: 5
+    data_availability: 2
+    effort: 3
+    priority: 6.0
+    status: blocked-data-gap
+    data_gap: Sysmon event 10 (ProcessAccess) is not collected; EDR telemetry not forwarded to the SIEM
+  - id: H10
+    title: SMB / admin-share lateral movement from workstations
+    technique: T1021.002
+    hypothesis_source: incident (H07 finding - svc-backup credential is usable for RDP)
+    threat_intel_relevance: 4
+    data_availability: 3
+    effort: 3
+    priority: 7.2
+    status: queued
+  - id: H11
+    title: DNS response size anomalies (TXT/NULL payloads)
+    technique: T1071.004
+    hypothesis_source: hunt H05 follow-up
+    threat_intel_relevance: 3
+    data_availability: 1
+    effort: 2
+    priority: 2.4
+    status: blocked-data-gap
+    data_gap: resolver logs carry query name/type only - no response size or answer data for TXT
+  - id: H12
+    title: OAuth consent grants to unverified apps
+    technique: T1528
+    hypothesis_source: threat intel (consent phishing against M365 tenants)
+    threat_intel_relevance: 3
+    data_availability: 2
+    effort: 2
+    priority: 4.8
+    status: blocked-data-gap
+    data_gap: cloud identity audit logs not in this dataset

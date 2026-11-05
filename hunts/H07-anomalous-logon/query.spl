@@ -1,0 +1,12 @@
+`comment("H07 - Anomalous logon behaviour: interactive logons that are novel for a non-interactive account.")`
+index=wineventlog source="XmlWinEventLog:Security" EventCode=4624 earliest=-14d@d
+| eval account=lower(Account_Name), hour=tonumber(strftime(_time,"%H")),
+       interactive=if(Logon_Type IN (2,10,11),1,0), noninteractive=if(Logon_Type IN (3,4,5),1,0)
+| where NOT match(account, "\$$")
+| eventstats count as total sum(interactive) as n_int sum(noninteractive) as n_nonint values(Logon_Type) as types by account
+| eval interactive_fraction=n_int/total
+| where interactive=1 AND n_nonint>0 AND interactive_fraction<=0.10
+| eval off_hours=if(hour<6 OR hour>=22,1,0),
+       score=round(min(100, 100*(0.7+0.25*off_hours)*if(like(account,"svc-%"),1.05,1.0)),1)
+| table _time account host Logon_Type hour Source_Network_Address off_hours score interactive_fraction total types
+| sort - score

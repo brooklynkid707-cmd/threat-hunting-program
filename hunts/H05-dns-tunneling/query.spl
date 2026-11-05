@@ -1,0 +1,21 @@
+`comment("H05 - DNS tunneling: entropy/length/cardinality of subdomains per registered domain.")`
+`comment("Uses URL Toolbox (ut_parse_extended, ut_shannon) for PSL-correct splitting and entropy.")`
+index=dns earliest=-14d@d
+| eval query=lower(query)
+| `ut_parse_extended(query, list:mozilla)`
+| eval registered=ut_domain, sub=ut_subdomain
+| where isnotnull(sub) AND sub!=""
+| eval label=mvindex(split(sub,"."),0)
+| `ut_shannon(label)`
+| stats dc(sub) as unique_subdomains count as queries sum(eval(if(record_type="TXT",1,0))) as txt
+        avg(eval(len(label))) as mean_len avg(ut_shannon) as mean_entropy values(src) as hosts
+        by registered
+| where unique_subdomains >= 10
+| eval len_t=max(0,min(1,(mean_len-10)/30)),
+       ent_t=max(0,min(1,(mean_entropy-2.5)/2)),
+       card_t=max(0,min(1,(unique_subdomains-10)/290)),
+       score=100*(0.4*len_t + 0.3*ent_t + 0.3*card_t + if(txt>0,0.1,0))
+| lookup known_cdns.csv registered OUTPUT cdn
+| eval score=round(if(isnotnull(cdn), score*0.1, score),1), mean_len=round(mean_len,1), mean_entropy=round(mean_entropy,2)
+| sort - score
+| table registered score unique_subdomains queries txt mean_len mean_entropy hosts

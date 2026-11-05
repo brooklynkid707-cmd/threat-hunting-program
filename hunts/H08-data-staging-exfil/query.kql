@@ -1,0 +1,38 @@
+// H08 - Data staging and exfil: archive creation followed by external egress above host baseline
+// Defender XDR: DeviceFileEvents + DeviceNetworkEvents. Scheduled analytic (hourly, 2h lookback).
+let lookback = 14d;
+let window = 30m;
+let min_egress = 50000000;   // 50 MB
+let host_baseline = DeviceNetworkEvents
+    | where Timestamp > ago(lookback)
+    | summarize P95 = percentile(tolong(SentBytes), 95) by DeviceName;
+let archives = DeviceFileEvents
+    | where Timestamp > ago(lookback) and ActionType == "FileCreated"
+    | where FileName matches regex @"(?i)\.(7z|zip|rar|tar|gz|cab)$"
+    | project ArchiveTime = Timestamp, DeviceName, ArchivePath = FolderPath, FileName, FileSize,
+              Account = InitiatingProcessAccountName, Creator = InitiatingProcessFileName;
+archives
+| join kind=inner (
+    DeviceNetworkEvents
+    | where Timestamp > ago(lookback)
+    | extend Domain = tolower(RemoteUrl)
+    | extend External = RemoteIPType == "Public" and not(Domain endswith ".northwind.example")
+    | project NetTime = Timestamp, DeviceName, Domain, RemoteIP, SentBytes = tolong(SentBytes), External
+  ) on DeviceName
+| where NetTime between (ArchiveTime .. (ArchiveTime + window))
+| join kind=inner host_baseline on DeviceName
+| where SentBytes > P95
+| summarize ExternalBytes = sumif(SentBytes, External), InternalBytes = sumif(SentBytes, not(External)),
+            Destinations = make_set_if(Domain, External, 5), P95 = take_any(P95)
+          by DeviceName, ArchiveTime, ArchivePath, FileName, FileSize, Account, Creator
+| where ExternalBytes + InternalBytes >= min_egress
+| extend IsExternal = ExternalBytes >= min_egress,
+         Moved = iff(ExternalBytes >= min_egress, ExternalBytes, ExternalBytes + InternalBytes)
+| extend Ratio = Moved * 1.0 / max_of(P95, 1),
+         StagingPath = ArchivePath matches regex @"(?i)\\(perflogs|windows\\temp|programdata)\\|\\users\\public\\"
+| extend Score = 100.0 * (0.15 + 0.20 * min_of(1.0, (Ratio - 1) / 500.0) + 0.20 * min_of(1.0, Moved / 200000000.0)
+                          + 0.35 * toint(IsExternal) + 0.10 * toint(StagingPath))
+| extend Score = iff(IsExternal, Score, Score * 0.2)
+| project ArchiveTime, DeviceName, Account, ArchivePath, FileSize, MovedMB = round(Moved / 1e6, 1),
+          Ratio = round(Ratio, 0), IsExternal, Destinations, StagingPath, Score = round(Score, 1), Creator
+| order by Score desc

@@ -1,0 +1,33 @@
+title: Archive Written To Suspicious Staging Path
+id: H08-archive-staging-path
+status: experimental
+description: >
+  Graduated from hunt H08. A compressed archive (7z/zip/rar) is created in a
+  staging-prone location - PerfLogs, Windows\Temp, ProgramData, Public. This is
+  the collection step before exfiltration; the scheduled analytic then ties it to
+  an outbound byte spike. The nightly backup writes to a dedicated backup volume
+  and is not matched.
+author: JP Scirica
+date: 2026/09/21
+references:
+  - hunts/H08-data-staging-exfil/hypothesis.md
+hunt_source: files
+logsource:
+  product: windows
+  category: file_event
+detection:
+  selection:
+    ext:
+      - 7z
+      - zip
+      - rar
+    path|re: '\\PerfLogs\\|\\Windows\\Temp\\|\\ProgramData\\|\\Users\\Public\\'
+  condition: selection
+falsepositives:
+  - An application legitimately writing archives to ProgramData; baseline per host.
+level: medium
+tags:
+  - attack.collection
+  - attack.t1074.001
+  - attack.exfiltration
+  - attack.t1567.002

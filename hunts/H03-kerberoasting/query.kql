@@ -1,0 +1,23 @@
+// H03 - Kerberoasting: distinct RC4 SPNs per account in a 10-minute window
+// Sentinel SecurityEvent (4769). Candidate for an NRT/scheduled analytic (graduated).
+let lookback = 14d;
+let window = 10m;
+let threshold = 5;
+SecurityEvent
+| where TimeGenerated > ago(lookback)
+| where EventID == 4769
+| extend Ticket = tostring(EventData.TicketEncryptionType),
+         Service = tolower(tostring(EventData.ServiceName)),
+         Account = tolower(tostring(EventData.TargetUserName)),
+         Client = tostring(EventData.IpAddress)
+| where Ticket == "0x17"
+| where Service !endswith "$" and Service != "krbtgt"
+| summarize DistinctSPNs = dcount(Service), SPNs = make_set(Service, 50), Requests = count(),
+            First = min(TimeGenerated), Last = max(TimeGenerated), Clients = make_set(Client, 5)
+          by Account, bin(TimeGenerated, window)
+| where DistinctSPNs >= 2
+| extend BurstSeconds = datetime_diff('second', Last, First)
+| extend Score = iff(DistinctSPNs >= threshold, 1.0, 0.3) * min_of(100.0, 100.0 * DistinctSPNs / 9.0)
+| order by Score desc, DistinctSPNs desc
+// Note: bin() is a tumbling window; a burst straddling a boundary splits. The Python hunt
+// and the Sigma correlation use a sliding window. For the analytic, run every 5m over 10m.

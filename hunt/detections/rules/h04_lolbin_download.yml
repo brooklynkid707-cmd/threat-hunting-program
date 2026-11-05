@@ -1,0 +1,35 @@
+title: LOLBin Remote Payload Fetch Or Scriptlet Execution
+id: H04-lolbin-remote-fetch
+status: experimental
+description: >
+  Graduated from hunt H04. A signed living-off-the-land binary is invoked with a
+  network argument - certutil -urlcache, regsvr32 /i:http (Squiblydoo), or mshta
+  http. The binaries are benign by themselves; the network argument is the abuse.
+  Baseline certutil usage (-store, -dump) carries no URL and is not matched.
+author: JP Scirica
+date: 2026/09/21
+references:
+  - hunts/H04-lolbin-abuse/hypothesis.md
+hunt_source: process
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_bin:
+    process:
+      - certutil.exe
+      - regsvr32.exe
+      - mshta.exe
+      - bitsadmin.exe
+  selection_net:
+    cmdline|re: 'https?://|-urlcache|/i:\s*http|scrobj\.dll'
+  condition: selection_bin and selection_net
+falsepositives:
+  - Software that legitimately fetches over HTTP via these binaries (rare).
+level: high
+tags:
+  - attack.command_and_control
+  - attack.t1105
+  - attack.defense_evasion
+  - attack.t1218.010
+  - attack.t1218.011

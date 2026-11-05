@@ -1,0 +1,36 @@
+title: Kerberoasting - RC4 TGS Burst For Many SPNs
+id: H03-kerberoasting-rc4-burst
+status: experimental
+description: >
+  Graduated from hunt H03. A single account requests Kerberos service tickets
+  (4769) with RC4 encryption (0x17) for many distinct service principals inside a
+  short window - the signature of an offline-cracking harvest. A legacy service
+  account that always uses RC4 touches only its own single SPN and does not trip
+  the distinct-SPN threshold.
+author: JP Scirica
+date: 2026/09/21
+references:
+  - hunts/H03-kerberoasting/hypothesis.md
+hunt_source: auth
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    event_id: 4769
+    ticket_encryption: '0x17'
+  condition: selection
+correlation:
+  type: value_count
+  field: service_name
+  group_by:
+    - user
+  timespan: 600
+  condition:
+    gte: 5
+falsepositives:
+  - Vulnerability scanners enumerating SPNs; confirm the source host.
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1558.003

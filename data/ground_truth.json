@@ -1,0 +1,115 @@
+{
+  "all_synthetic": true,
+  "compromised_host": "WKS-0042",
+  "compromised_user": "rbaxter",
+  "hunts": {
+    "H01": {
+      "benign_lookalikes": [
+        "updates.contoso-software.example (high CV, allowlisted)",
+        "time.ntp-pool.example (allowlisted)",
+        "telemetry.vendor-apm.example (low CV, allowlisted)",
+        "sync.collab-suite.example (high volume, bursty)"
+      ],
+      "first_activity": "2026-09-10T10:21:46Z",
+      "technique": "T1071.001",
+      "true_positive": {
+        "dst_domain": "cdn-sync-07.telemetry-edge.example",
+        "dst_ip": "203.0.113.45",
+        "host": "WKS-0042"
+      }
+    },
+    "H02": {
+      "benign_lookalikes": [
+        "IT admin tools (psexec/nmap/procmon/wireshark) on admin hosts"
+      ],
+      "first_activity": "2026-09-10T10:15:00Z",
+      "technique": "T1204.002",
+      "true_positive": {
+        "child": "rundll32.exe",
+        "gparent": "EXCEL.EXE",
+        "host": "WKS-0042",
+        "parent": "cmd.exe"
+      }
+    },
+    "H03": {
+      "benign_lookalikes": [
+        "svc-legacy RC4 TGS for a single SPN",
+        "users requesting AES TGS"
+      ],
+      "first_activity": "2026-09-11T11:10:00Z",
+      "technique": "T1558.003",
+      "true_positive": {
+        "distinct_spns": 9,
+        "encryption": "0x17",
+        "user": "rbaxter"
+      }
+    },
+    "H04": {
+      "benign_lookalikes": [
+        "certutil.exe -store/-verify (no network argument)",
+        "regsvr32.exe registering a Program Files DLL"
+      ],
+      "first_activity": "2026-09-10T10:16:40Z",
+      "technique": "T1105",
+      "true_positive": {
+        "binaries": [
+          "certutil.exe",
+          "regsvr32.exe",
+          "mshta.exe"
+        ],
+        "host": "WKS-0042"
+      }
+    },
+    "H05": {
+      "benign_lookalikes": [
+        "cloudfront-dist.example",
+        "g.akamai-cdn.example"
+      ],
+      "first_activity": "2026-09-12T08:03:40Z",
+      "technique": "T1048.003",
+      "true_positive": {
+        "host": "WKS-0042",
+        "registered_domain": "dataxfil-svc.example",
+        "tunnel_zone": "sync.dataxfil-svc.example"
+      }
+    },
+    "H06": {
+      "benign_lookalikes": [
+        "FinanceLedger Sync (1 host, Program Files, service account)",
+        "\\NW-IT\\InventoryScan (3 admin hosts, Program Files)"
+      ],
+      "first_activity": "2026-09-10T10:20:00Z",
+      "technique": "T1543.003",
+      "true_positive": {
+        "host": "WKS-0042",
+        "name": "WinSyncHelper"
+      }
+    },
+    "H07": {
+      "benign_lookalikes": [
+        "achen late-evening type-2 logon on own workstation",
+        "svc-scan nightly type-3 network logons"
+      ],
+      "first_activity": "2026-09-13T02:10:00Z",
+      "technique": "T1078.002",
+      "true_positive": {
+        "host": "SRV-0001",
+        "logon_type": 10,
+        "user": "svc-backup"
+      }
+    },
+    "H08": {
+      "benign_lookalikes": [
+        "nightly backup 7z shipped to internal backup-target"
+      ],
+      "first_activity": "2026-09-16T01:05:00Z",
+      "technique": "T1567.002",
+      "true_positive": {
+        "dst_domain": "eu-west.cloudbox-storage.example",
+        "host": "WKS-0042",
+        "path": "C:\\PerfLogs\\archive.7z"
+      }
+    }
+  },
+  "scenario": "Synthetic intrusion in Northwind Logistics (fictional). Beachhead on WKS-0042 via phished user rbaxter."
+}

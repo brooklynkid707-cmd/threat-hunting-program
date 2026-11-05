@@ -1,0 +1,21 @@
+`comment("H06 - Fleet-rare persistence: stack 7045 services and 4698 tasks across the fleet.")`
+(index=wineventlog source="XmlWinEventLog:System" EventCode=7045) OR (index=wineventlog source="XmlWinEventLog:Security" EventCode=4698) earliest=-30d@d
+| eval kind=if(EventCode=7045,"service","task"),
+       name=coalesce(Service_Name, Task_Name),
+       image=Service_File_Name,
+       account=coalesce(Service_Account, Account_Name)
+| rex field=Task_Content "<Command>(?<task_cmd>[^<]+)</Command>"
+| eval image=coalesce(image, task_cmd)
+| eventstats min(_time) as fleet_start
+| stats dc(host) as hosts values(host) as host_list min(_time) as first_seen first(image) as image first(account) as account first(fleet_start) as fleet_start by kind name
+| where hosts <= 3
+| eval p=lower(image),
+       user_path=if(match(p,"\\\\(appdata|temp|downloads|perflogs)\\\\|\\\\users\\\\public\\\\"),1,0),
+       imitator=if(match(lower(replace(name," ","")),"sync|helper|update|host|svc|win"),1,0),
+       days_late=(first_seen-fleet_start)/86400,
+       managed=if(like(p,"c:\\program files%") OR like(p,"c:\\windows\\system32%"),1,0),
+       score=100*(1-(hosts-1)/3)*(0.3+0.45*user_path+0.15*imitator+0.10*min(1,max(0,days_late/5))),
+       score=round(if(managed=1, score*0.4, score),1)
+| convert ctime(first_seen)
+| sort - score
+| table kind name score hosts host_list image account first_seen user_path managed

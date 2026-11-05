@@ -1,0 +1,186 @@
+{
+  "hunts": {
+    "H01": {
+      "hunt_id": "H01",
+      "n_findings": 10,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1071.001",
+      "top_entity": "WKS-0042 -> cdn-sync-07.telemetry-edge.example",
+      "top_is_tp": true,
+      "true_positive_found": true
+    },
+    "H02": {
+      "hunt_id": "H02",
+      "n_findings": 8,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1204.002",
+      "top_entity": "excel.exe -> cmd.exe -> rundll32.exe",
+      "top_is_tp": true,
+      "true_positive_found": true
+    },
+    "H03": {
+      "hunt_id": "H03",
+      "n_findings": 1,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1558.003",
+      "top_entity": "rbaxter",
+      "top_is_tp": true,
+      "true_positive_found": true
+    },
+    "H04": {
+      "hunt_id": "H04",
+      "n_findings": 3,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1105",
+      "top_entity": "WKS-0042 / certutil.exe",
+      "top_is_tp": true,
+      "true_positive_found": true
+    },
+    "H05": {
+      "hunt_id": "H05",
+      "n_findings": 3,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1048.003",
+      "top_entity": "dataxfil-svc.example",
+      "top_is_tp": true,
+      "true_positive_found": true
+    },
+    "H06": {
+      "hunt_id": "H06",
+      "n_findings": 3,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1543.003",
+      "top_entity": "WinSyncHelper",
+      "top_is_tp": true,
+      "true_positive_found": true
+    },
+    "H07": {
+      "hunt_id": "H07",
+      "n_findings": 1,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1078.002",
+      "top_entity": "svc-backup",
+      "top_is_tp": true,
+      "true_positive_found": true
+    },
+    "H08": {
+      "hunt_id": "H08",
+      "n_findings": 10,
+      "note": "",
+      "precision_at_malicious": 1.0,
+      "rank_of_first_tp": 1,
+      "technique": "T1567.002",
+      "top_entity": "WKS-0042 / archive.7z",
+      "top_is_tp": true,
+      "true_positive_found": true
+    }
+  },
+  "program": {
+    "conversion_rate": 0.75,
+    "data_gap_hunts": [
+      "H05"
+    ],
+    "data_gaps": [
+      [
+        "H01",
+        "No TLS JA3/JA4 or SNI fields in the proxy feed; client fingerprinting would cut review time."
+      ],
+      [
+        "H05",
+        "DNS resolver logs lack response size / answer payload for TXT queries (backlog H11)."
+      ],
+      [
+        "H06",
+        "Service creation events carry no signer/publisher field; hash reputation is manual."
+      ],
+      [
+        "H08",
+        "No file-share audit (5145) events, so the archive's source files cannot be enumerated."
+      ]
+    ],
+    "detections_created": [
+      "H02",
+      "H03",
+      "H04",
+      "H06",
+      "H07",
+      "H08"
+    ],
+    "hunts_executed": 8,
+    "mean_dwell_hours": 220.0,
+    "mean_time_to_find_hours": 16.025,
+    "time_to_find": {
+      "H01": {
+        "dwell_hours": 253.6,
+        "first_activity_epoch": 1789035706.0,
+        "found_epoch": 1789084800,
+        "hunt_id": "H01",
+        "time_to_find_hours": 13.6
+      },
+      "H02": {
+        "dwell_hours": 253.7,
+        "first_activity_epoch": 1789035300.0,
+        "found_epoch": 1789084800,
+        "hunt_id": "H02",
+        "time_to_find_hours": 13.8
+      },
+      "H03": {
+        "dwell_hours": 228.8,
+        "first_activity_epoch": 1789125000.0,
+        "found_epoch": 1789171200,
+        "hunt_id": "H03",
+        "time_to_find_hours": 12.8
+      },
+      "H04": {
+        "dwell_hours": 253.7,
+        "first_activity_epoch": 1789035400.0,
+        "found_epoch": 1789084800,
+        "hunt_id": "H04",
+        "time_to_find_hours": 13.7
+      },
+      "H05": {
+        "dwell_hours": 207.9,
+        "first_activity_epoch": 1789200220.0,
+        "found_epoch": 1789257600,
+        "hunt_id": "H05",
+        "time_to_find_hours": 15.9
+      },
+      "H06": {
+        "dwell_hours": 253.6,
+        "first_activity_epoch": 1789035600.0,
+        "found_epoch": 1789084800,
+        "hunt_id": "H06",
+        "time_to_find_hours": 13.7
+      },
+      "H07": {
+        "dwell_hours": 189.8,
+        "first_activity_epoch": 1789265400.0,
+        "found_epoch": 1789344000,
+        "hunt_id": "H07",
+        "time_to_find_hours": 21.8
+      },
+      "H08": {
+        "dwell_hours": 118.9,
+        "first_activity_epoch": 1789520700.0,
+        "found_epoch": 1789603200,
+        "hunt_id": "H08",
+        "time_to_find_hours": 22.9
+      }
+    },
+    "true_positives": 8
+  }
+}

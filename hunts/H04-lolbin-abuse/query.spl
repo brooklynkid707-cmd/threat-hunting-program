@@ -1,0 +1,19 @@
+`comment("H04 - LOLBin abuse: LOLBAS-style command-line patterns with a per-host baseline.")`
+index=sysmon EventCode=1 earliest=-14d@d
+| eval bin=lower(mvindex(split(Image,"\\"),-1))
+| search bin IN ("certutil.exe","regsvr32.exe","mshta.exe","bitsadmin.exe","rundll32.exe","powershell.exe","wmic.exe")
+| eventstats count as host_runs by host bin
+| eval pattern=case(
+    bin="certutil.exe"   AND match(CommandLine,"(?i)-urlcache|-f\s+https?://|https?://"), "certutil remote download",
+    bin="regsvr32.exe"   AND match(CommandLine,"(?i)/i:\s*https?://|scrobj\.dll"), "regsvr32 remote scriptlet",
+    bin="mshta.exe"      AND match(CommandLine,"(?i)https?://|vbscript:|javascript:"), "mshta remote/script",
+    bin="bitsadmin.exe"  AND match(CommandLine,"(?i)/transfer|/addfile|https?://"), "bitsadmin transfer",
+    bin="powershell.exe" AND match(CommandLine,"(?i)-enc\b|-encodedcommand|downloadstring|invoke-webrequest|iwr\s"), "powershell cradle/encoded",
+    bin="rundll32.exe"   AND match(CommandLine,"(?i)javascript:|https?://|url\.dll"), "rundll32 remote",
+    bin="wmic.exe"       AND match(CommandLine,"(?i)process\s+call\s+create|/node:"), "wmic process create")
+| where isnotnull(pattern)
+| eval weight=case(like(pattern,"powershell%"),0.8, like(pattern,"wmic%"),0.7, like(pattern,"bitsadmin%") OR like(pattern,"rundll32%"),0.9, true(),1.0),
+       score=round(min(100, 100*weight*(0.6+0.4/max(host_runs,1))),1)
+| rex field=CommandLine "(?<url>https?://[^\s\"']+)"
+| table _time host User bin pattern score host_runs url CommandLine ParentImage
+| sort - score _time

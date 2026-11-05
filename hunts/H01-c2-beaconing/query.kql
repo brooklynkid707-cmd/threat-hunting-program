@@ -1,0 +1,49 @@
+// H01 - C2 beaconing: inter-arrival statistics per (host, destination)
+// Sentinel / Defender XDR. Weekly scheduled hunt (not an analytic rule - see hypothesis.md).
+// Tables: DeviceNetworkEvents (MDE). For a proxy-only shop swap in CommonSecurityLog
+// (DeviceName <- SourceHostName, RemoteUrl <- DestinationHostName).
+let lookback = 14d;
+let min_connections = 20;
+let band = 0.30;                       // +/-30% jitter band around the median interval
+// Sanctioned beacon-like destinations (software inventory). Keep in a watchlist in production:
+//   _GetWatchlist('SanctionedBeacons') | project Domain
+let sanctioned = dynamic([
+    "updates.contoso-software.example", "time.ntp-pool.example",
+    "telemetry.vendor-apm.example", "ocsp.ca-provider.example", "sync.collab-suite.example"]);
+DeviceNetworkEvents
+| where Timestamp > ago(lookback)
+| where RemoteIPType == "Public" and isnotempty(RemoteUrl)
+| extend Domain = tolower(tostring(parse_url(strcat("https://", RemoteUrl)).Host))
+| where not(Domain endswith ".northwind.example")
+| summarize Times = make_list(Timestamp, 100000), BytesOut = make_list(tolong(SentBytes), 100000),
+            RemoteIPs = make_set(RemoteIP, 10)
+          by DeviceName, Domain
+| where array_length(Times) >= min_connections
+| extend Times = array_sort_asc(Times)
+| mv-apply with_itemindex=i t = Times to typeof(datetime) on (
+    extend prev = iff(i == 0, datetime(null), todatetime(Times[i - 1]))
+    | where isnotnull(prev)
+    | extend delta = datetime_diff('second', t, prev)
+    | summarize Deltas = make_list(delta), MeanDelta = avg(delta), StdDelta = stdev(delta),
+                MedianDelta = percentile(delta, 50)
+  )
+| mv-apply d = Deltas to typeof(long) on (
+    summarize MAD = percentile(abs(d - MedianDelta), 50),
+              InBand = countif(abs(d - MedianDelta) <= band * MedianDelta) * 1.0 / count()
+  )
+| mv-apply b = BytesOut to typeof(long) on (summarize BytesCV = stdev(b) / avg(b))
+| extend Connections = array_length(Times),
+         CV = StdDelta / MeanDelta,
+         RobustCV = 1.4826 * MAD / MedianDelta
+| extend Regularity = max_of(0.0, 1.0 - RobustCV / 0.8),
+         Payload = max_of(0.0, 1.0 - min_of(1.0, BytesCV)),
+         Volume = min_of(1.0, Connections / 200.0),
+         InBeaconBand = iff(MedianDelta between (30 .. 7200), 1.0, 0.3)
+| extend Score = 100.0 * Regularity * (0.40 * InBand + 0.25 * Payload + 0.20 * Volume + 0.15) * InBeaconBand
+| extend Sanctioned = Domain in (sanctioned)
+| extend Score = iff(Sanctioned, Score * 0.05, Score)
+| where Score >= 20
+| project DeviceName, Domain, RemoteIPs, Score = round(Score, 1), Connections,
+          MedianInterval_s = MedianDelta, CV = round(CV, 2), RobustCV = round(RobustCV, 2),
+          InBand = round(InBand, 2), BytesCV = round(BytesCV, 2), Sanctioned
+| order by Score desc

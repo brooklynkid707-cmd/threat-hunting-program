@@ -1,0 +1,32 @@
+title: Service Account Interactive Logon
+id: H07-service-account-interactive-logon
+status: experimental
+description: >
+  Graduated from hunt H07. A service account (svc-*) performs an interactive or
+  remote-interactive logon (type 2/10/11). Service accounts should only ever
+  authenticate as a service or over the network (type 5/3); an interactive logon
+  means the credential is being driven by a human at a console or over RDP.
+author: JP Scirica
+date: 2026/09/21
+references:
+  - hunts/H07-anomalous-logon/hypothesis.md
+hunt_source: auth
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    event_id: 4624
+    user|startswith: 'svc-'
+    logon_type:
+      - 2
+      - 10
+      - 11
+  condition: selection
+falsepositives:
+  - A documented break-glass maintenance logon; correlate with a change ticket.
+level: high
+tags:
+  - attack.initial_access
+  - attack.t1078.002
+  - attack.lateral_movement

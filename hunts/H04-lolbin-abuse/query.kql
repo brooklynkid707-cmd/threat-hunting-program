@@ -1,0 +1,28 @@
+// H04 - LOLBin abuse: network-argument patterns with a per-host baseline (Defender XDR)
+let lookback = 14d;
+let lolbins = dynamic(["certutil.exe","regsvr32.exe","mshta.exe","bitsadmin.exe","rundll32.exe","powershell.exe","wmic.exe"]);
+let baseline = DeviceProcessEvents
+    | where Timestamp > ago(lookback) and tolower(FileName) in (lolbins)
+    | summarize HostRuns = count() by DeviceName, Bin = tolower(FileName);
+DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| extend Bin = tolower(FileName), Cmd = ProcessCommandLine
+| where Bin in (lolbins)
+| extend Pattern = case(
+    Bin == "certutil.exe"   and Cmd matches regex @"(?i)-urlcache|-f\s+https?://|https?://", "certutil remote download",
+    Bin == "regsvr32.exe"   and Cmd matches regex @"(?i)/i:\s*https?://|scrobj\.dll",          "regsvr32 remote scriptlet",
+    Bin == "mshta.exe"      and Cmd matches regex @"(?i)https?://|vbscript:|javascript:",       "mshta remote/script",
+    Bin == "bitsadmin.exe"  and Cmd matches regex @"(?i)/transfer|/addfile|https?://",          "bitsadmin transfer",
+    Bin == "powershell.exe" and Cmd matches regex @"(?i)-enc\b|-encodedcommand|downloadstring|invoke-webrequest|iwr\s", "powershell cradle/encoded",
+    Bin == "rundll32.exe"   and Cmd matches regex @"(?i)javascript:|https?://|url\.dll",        "rundll32 remote",
+    Bin == "wmic.exe"       and Cmd matches regex @"(?i)process\s+call\s+create|/node:",        "wmic process create",
+    "")
+| where isnotempty(Pattern)
+| join kind=leftouter baseline on DeviceName, Bin
+| extend Weight = case(Pattern startswith "powershell", 0.8, Pattern startswith "wmic", 0.7,
+                       Pattern startswith "bitsadmin" or Pattern startswith "rundll32", 0.9, 1.0)
+| extend Score = min_of(100.0, 100.0 * Weight * (0.6 + 0.4 / max_of(HostRuns, 1)))
+| extend Url = extract(@"(https?://[^\s""']+)", 1, Cmd)
+| project Timestamp, DeviceName, AccountName, Bin, Pattern, Score = round(Score, 1), HostRuns, Url, Cmd,
+          InitiatingProcessFileName
+| order by Score desc, Timestamp asc

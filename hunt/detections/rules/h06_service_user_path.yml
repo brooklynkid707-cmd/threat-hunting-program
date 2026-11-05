@@ -1,0 +1,28 @@
+title: New Service With Image In User-Writable Path
+id: H06-service-user-writable-path
+status: experimental
+description: >
+  Graduated from hunt H06. A service (7045) is installed whose binary lives in a
+  user-writable directory (AppData, Temp, PerfLogs, Public, Downloads). Legitimate
+  services run from Program Files or System32; a service pointing at a user temp
+  path is a persistence red flag and in the fleet-rarity analytic appeared on a
+  single host.
+author: JP Scirica
+date: 2026/09/21
+references:
+  - hunts/H06-fleet-rare-persistence/hypothesis.md
+hunt_source: service
+logsource:
+  product: windows
+  service: system
+detection:
+  selection:
+    event_id: 7045
+    image_path|re: '\\(AppData|Temp|PerfLogs|Downloads)\\|\\Users\\Public\\'
+  condition: selection
+falsepositives:
+  - Poorly packaged software installing into a user profile; verify the publisher.
+level: high
+tags:
+  - attack.persistence
+  - attack.t1543.003

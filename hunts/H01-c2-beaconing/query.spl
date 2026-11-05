@@ -1,0 +1,34 @@
+`comment("H01 - C2 beaconing: inter-arrival statistics per (host, destination). Weekly scheduled hunt.")`
+`comment("Proxy data mapped to the CIM Web datamodel. sanctioned_beacons.csv = software inventory lookup (domain, product).")`
+| tstats summariesonly=false count from datamodel=Web where earliest=-14d@d latest=@d by _time span=1s Web.src Web.dest Web.bytes_out
+| rename Web.* as *
+| eval dest=lower(dest)
+| where NOT match(dest, "\.northwind\.example$")
+| sort 0 src dest _time
+| streamstats current=f window=1 last(_time) as prev_time by src dest
+| eval delta=_time-prev_time
+| where isnotnull(delta)
+| eventstats median(delta) as median_delta by src dest
+| eval abs_dev=abs(delta-median_delta),
+       in_band=if(abs_dev <= 0.30*median_delta, 1, 0)
+| stats count as deltas avg(delta) as mean_delta stdev(delta) as std_delta
+        median(abs_dev) as mad first(median_delta) as median_delta
+        avg(in_band) as in_band_fraction
+        avg(bytes_out) as mean_bytes stdev(bytes_out) as std_bytes
+        by src dest
+| eval connections=deltas+1
+| where connections >= 20
+| eval cv=std_delta/mean_delta,
+       robust_cv=1.4826*mad/median_delta,
+       bytes_cv=std_bytes/mean_bytes,
+       regularity=max(0, 1 - robust_cv/0.8),
+       payload=max(0, 1 - min(1, bytes_cv)),
+       volume=min(1, connections/200),
+       beacon_band=if(median_delta>=30 AND median_delta<=7200, 1.0, 0.3),
+       score=100*regularity*(0.40*in_band_fraction + 0.25*payload + 0.20*volume + 0.15)*beacon_band
+| lookup sanctioned_beacons.csv domain as dest OUTPUT product as sanctioned_product
+| eval score=if(isnotnull(sanctioned_product), score*0.05, score)
+| where score >= 20
+| eval score=round(score,1), cv=round(cv,2), robust_cv=round(robust_cv,2), in_band_fraction=round(in_band_fraction,2), bytes_cv=round(bytes_cv,2)
+| table src dest score connections median_delta cv robust_cv in_band_fraction bytes_cv sanctioned_product
+| sort - score

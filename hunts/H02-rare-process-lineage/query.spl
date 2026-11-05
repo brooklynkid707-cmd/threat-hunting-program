@@ -1,0 +1,19 @@
+`comment("H02 - Rare process lineage via fleet stacking. Sysmon EventCode 1 with parent + grandparent enrichment.")`
+index=sysmon EventCode=1 earliest=-14d@d
+| eval child=lower(mvindex(split(Image,"\\"),-1)),
+       parent=lower(mvindex(split(ParentImage,"\\"),-1))
+| lookup process_parent_lookup ProcessGuid as ParentProcessGuid OUTPUT ParentImage as GrandParentImage
+| eval gparent=coalesce(lower(mvindex(split(GrandParentImage,"\\"),-1)), "?"),
+       lineage=gparent." -> ".parent." -> ".child
+| stats dc(host) as hosts count as events values(host) as host_list first(CommandLine) as sample_cmd min(_time) as first_seen by lineage gparent parent child
+| where hosts <= 8
+| eval rarity=1 - (hosts-1)/8,
+       shape=if(match(gparent,"^(winword|excel|powerpnt|outlook)\.exe$") AND match(parent,"^(cmd|powershell|pwsh|wscript|cscript)\.exe$"),0.6,0)
+            + if(match(parent,"^(cmd|powershell|pwsh)\.exe$") AND match(child,"^(rundll32|regsvr32|mshta|certutil|installutil)\.exe$"),0.4,0)
+            + if(match(sample_cmd,"(?i)\\\\(appdata|temp|downloads)\\\\|\\\\users\\\\public\\\\"),0.5,0),
+       score=min(100, 100*rarity*(0.25+shape)/1.5),
+       score=if(match(child,"^(psexec|nmap|procmon|wireshark)\.exe$"), score*0.15, score)
+| where score >= 10
+| convert ctime(first_seen)
+| sort - score
+| table lineage score hosts events host_list sample_cmd first_seen

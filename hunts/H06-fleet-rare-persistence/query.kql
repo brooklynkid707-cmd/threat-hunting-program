@@ -1,0 +1,32 @@
+// H06 - Fleet-rare persistence: stack services and scheduled tasks across the fleet
+// Sentinel: Event (System 7045) + SecurityEvent (4698). Monthly hunt + graduated path rule.
+let lookback = 30d;
+let services = Event
+    | where TimeGenerated > ago(lookback) and Source == "Service Control Manager" and EventID == 7045
+    | extend X = parse_xml(EventData)
+    | extend Name = tostring(X.DataItem.EventData.Data[0]["#text"]),
+             ImagePath = tostring(X.DataItem.EventData.Data[1]["#text"]),
+             Account = tostring(X.DataItem.EventData.Data[4]["#text"])
+    | project TimeGenerated, Computer, Kind = "service", Name, ImagePath, Account;
+let tasks = SecurityEvent
+    | where TimeGenerated > ago(lookback) and EventID == 4698
+    | extend Name = tostring(EventData.TaskName),
+             ImagePath = extract(@"<Command>([^<]+)</Command>", 1, tostring(EventData.TaskContent)),
+             Account = tostring(EventData.SubjectUserName)
+    | project TimeGenerated, Computer, Kind = "task", Name, ImagePath, Account;
+let fleet_start = toscalar(union services, tasks | summarize min(TimeGenerated));
+union services, tasks
+| summarize Hosts = dcount(Computer), HostList = make_set(Computer, 10), FirstSeen = min(TimeGenerated),
+            ImagePath = take_any(ImagePath), Account = take_any(Account)
+          by Kind, Name
+| where Hosts <= 3
+| extend P = tolower(ImagePath)
+| extend UserPath = P matches regex @"\\(appdata|temp|downloads|perflogs)\\|\\users\\public\\",
+         Imitator = tolower(replace_string(Name, " ", "")) matches regex @"sync|helper|update|host|svc|win",
+         DaysLate = datetime_diff('hour', FirstSeen, fleet_start) / 24.0,
+         Managed = P startswith @"c:\program files" or P startswith @"c:\windows\system32"
+| extend Score = 100.0 * (1.0 - (Hosts - 1) / 3.0)
+               * (0.3 + 0.45 * toint(UserPath) + 0.15 * toint(Imitator) + 0.10 * min_of(1.0, max_of(0.0, DaysLate / 5.0)))
+| extend Score = iff(Managed, Score * 0.4, Score)
+| project Kind, Name, Score = round(Score, 1), Hosts, HostList, ImagePath, Account, FirstSeen, UserPath, Managed
+| order by Score desc

@@ -1,0 +1,30 @@
+// H02 - Rare process lineage via fleet stacking (Defender XDR / Sentinel)
+// Stack gparent->parent->child across the fleet; read the long tail.
+let lookback = 14d;
+let office = dynamic(["winword.exe","excel.exe","powerpnt.exe","outlook.exe"]);
+let shells = dynamic(["cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe"]);
+let lolbins = dynamic(["rundll32.exe","regsvr32.exe","mshta.exe","certutil.exe","installutil.exe"]);
+let admin_tools = dynamic(["psexec.exe","nmap.exe","procmon.exe","wireshark.exe"]);
+let admin_hosts = _GetWatchlist('ITAdminWorkstations') | project DeviceName = tolower(SearchKey);
+DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where Timestamp > ago(lookback)
+    | project DeviceId, ParentPid = ProcessId, GParent = tolower(InitiatingProcessFileName),
+              ParentStart = ProcessCreationTime
+  ) on DeviceId, $left.InitiatingProcessId == $right.ParentPid
+| extend Child = tolower(FileName), Parent = tolower(InitiatingProcessFileName), GParent = coalesce(GParent, "?")
+| extend Lineage = strcat(GParent, " -> ", Parent, " -> ", Child)
+| summarize Hosts = dcount(DeviceName), Events = count(), HostList = make_set(DeviceName, 10),
+            SampleCmd = take_any(ProcessCommandLine), FirstSeen = min(Timestamp)
+          by Lineage, GParent, Parent, Child
+| where Hosts <= 8
+| extend Rarity = 1.0 - (Hosts - 1) / 8.0,
+         Shape = iff(GParent in (office) and Parent in (shells), 0.6, 0.0)
+               + iff(Parent in (shells) and Child in (lolbins), 0.4, 0.0)
+               + iff(SampleCmd matches regex @"(?i)\\(appdata|temp|downloads)\\|\\users\\public\\", 0.5, 0.0)
+| extend Score = min_of(100.0, 100.0 * Rarity * (0.25 + Shape) / 1.5)
+| extend Score = iff(Child in (admin_tools), Score * 0.15, Score)
+| where Score >= 10
+| order by Score desc
