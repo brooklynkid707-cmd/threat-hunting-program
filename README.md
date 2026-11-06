@@ -105,7 +105,7 @@ python -m hunt run-all --out output/  # one JSON per hunt
 python -m hunt score                  # recall / rank of first TP / precision vs ground truth
 python -m hunt detect                 # run the graduated Sigma rules
 python -m hunt report                 # regenerate hunts/*/results.md, program report, examples/
-make data                             # regenerate the dataset (byte-identical)
+make data                             # regenerate the dataset (identical content)
 ```
 
 ## Sample output

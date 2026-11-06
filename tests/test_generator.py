@@ -1,3 +1,4 @@
+import gzip
 import hashlib
 import os
 import subprocess
@@ -9,7 +10,11 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def _sha(fp):
-    with open(fp, "rb") as fh:
+    """Hash the logical content. .gz files are hashed after decompression because
+    compressed bytes depend on the zlib build (zlib vs zlib-ng), not on the data."""
+    fp = str(fp)
+    opener = gzip.open if fp.endswith(".gz") else open
+    with opener(fp, "rb") as fh:
         return hashlib.sha256(fh.read()).hexdigest()
 
 

@@ -3,8 +3,9 @@
 
 Fictional company. 14 days, ~60 workstations + 3 servers + 2 domain controllers,
 ~70 users. Six log sources (process, network, dns, auth, service, files) written
-as gzip JSON Lines into data/. A fixed seed makes the output byte-for-byte
-reproducible (tests/test_generator.py asserts this).
+as gzip JSON Lines into data/. A fixed seed makes the decompressed content
+byte-for-byte reproducible (tests/test_generator.py asserts this; the compressed
+bytes can differ between zlib builds such as zlib and zlib-ng).
 
 The benign baseline is deliberately noisy in the ways that fool naive hunts:
   * an update agent that beacons on a jittered ~60-min interval (looks like C2),
@@ -600,7 +601,7 @@ def write_sources(gen: Gen, out_dir: str):
         events.sort(key=lambda e: e["epoch"])
         fp = os.path.join(out_dir, f"{source}.jsonl.gz")
         payload = "".join(json.dumps(ev, sort_keys=True, separators=(",", ":")) + "\n" for ev in events)
-        # mtime=0 and no embedded filename -> byte-stable gzip output across runs
+        # mtime=0 and no embedded filename -> byte-stable gzip output across runs on one zlib build
         with open(fp, "wb") as raw, gzip.GzipFile(filename="", mode="wb", fileobj=raw,
                                                   compresslevel=9, mtime=0) as gz:
             gz.write(payload.encode("utf-8"))
